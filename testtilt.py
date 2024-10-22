@@ -68,13 +68,22 @@ q4 = np.array([0, 480])
 
 fov_angle = np.radians(60)
 fov_depth = 50
-fov_vertices = [
-    [0, 0, 0],
-    [fov_depth * np.tan(fov_angle/2), fov_depth * np.tan(fov_angle/2), fov_depth],
-    [-fov_depth * np.tan(fov_angle/2), fov_depth * np.tan(fov_angle/2), fov_depth],
-    [-fov_depth * np.tan(fov_angle/2), -fov_depth * np.tan(fov_angle/2), fov_depth],
-    [fov_depth * np.tan(fov_angle/2), -fov_depth * np.tan(fov_angle/2), fov_depth]
-]
+fov_vertices = np.array([
+    [0, 0, 0],  # Apex of the pyramid (camera origin)
+    [fov_depth * np.tan(fov_angle/2), fov_depth * np.tan(fov_angle/2), fov_depth],  # Front-right vertex
+    [-fov_depth * np.tan(fov_angle/2), fov_depth * np.tan(fov_angle/2), fov_depth],  # Front-left vertex
+    [-fov_depth * np.tan(fov_angle/2), -fov_depth * np.tan(fov_angle/2), fov_depth],  # Back-left vertex
+    [fov_depth * np.tan(fov_angle/2), -fov_depth * np.tan(fov_angle/2), fov_depth]   # Back-right vertex
+])
+
+# Rotation matrix for 45 degrees around the X-axis
+theta = np.radians(45)
+rotation_matrix_x = np.array([[1, 0, 0],
+                              [0, np.cos(theta), -np.sin(theta)],
+                              [0, np.sin(theta), np.cos(theta)]])
+
+# Apply rotation to FOV vertices
+fov_vertices = np.dot(fov_vertices, rotation_matrix_x.T)
 
 # Plotting the simulation
 fig = plt.figure()
@@ -83,12 +92,15 @@ ax = fig.add_subplot(111, projection='3d')
 # Call the modified cube plotting function and shift the cube
 plot_cube_on_camera_simulation(ax, position=[0,0,30])  # CHANGE THE CUBE LOCATION
 
-# Plot the 3D point
-# ax.scatter(point_3D_inertial[0], point_3D_inertial[1], point_3D_inertial[2], c='r', label='3D Target')
+# Define the triangular faces of the pyramid (FOV)
+faces = [[0, 1, 2],  # Front face
+         [0, 2, 3],  # Left face
+         [0, 3, 4],  # Back face
+         [0, 4, 1]]  # Right face
 
-# Plot the FOV vertices
-fov_vertices = np.array(fov_vertices)
-ax.plot_trisurf(fov_vertices[:,0], fov_vertices[:,1], fov_vertices[:,2], alpha=0.2, color='g')
+# Plot each face of the pyramid
+for face in faces:
+    ax.plot_trisurf(fov_vertices[face, 0], fov_vertices[face, 1], fov_vertices[face, 2], alpha=0.5, color='g')
 
 # Set labels and limits
 ax.set_xlabel('X')
@@ -100,7 +112,7 @@ ax.set_zlim(0, 60)
 
 # Show plot
 plt.legend()
-plt.title('Pinhole Camera Model - Moved Cube & FOV')
+plt.title('Pinhole Camera Model - Moved Cube & Rotated FOV with Full Pyramid')
 plt.show()
 
 print(f"Projected 2D point: {point_2D[:2]}")
