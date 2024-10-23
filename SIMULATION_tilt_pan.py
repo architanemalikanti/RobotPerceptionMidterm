@@ -2,6 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+#RESOURCES:
+#For the cube: https://www.geeksforgeeks.org/how-to-draw-3d-cube-using-matplotlib-in-python/
+#For the tilt matrix: Pinhole Camera Model and Field-of-view (FOV) paper
+#For the template to rotate the pyramid, and map the 2D projection from the 3D model: ChatGPT
+
 # Cube plotting function
 def plot_cube_on_camera_simulation(ax, position=[0, 0, 0], axes=[5, 5, 5], alpha=0.9): 
     # Create Data
@@ -181,5 +186,5 @@ def update_plot(cube_position, tilt=0, pan=0):
     plt.show()
 
 # Example of changing the cube position
-cube_position = np.array([0, 0, 40])  # CHANGE THIS TO EDIT CUBE POSITION
-update_plot(cube_position, tilt= -10, pan= 0)  # CHANGE TILT AND PAN ANGLES HERE
+cube_position = np.array([0, 30, 10])  # CHANGE THIS TO EDIT CUBE POSITION
+update_plot(cube_position, tilt= 0, pan= 0)  # CHANGE TILT AND PAN ANGLES HERE
