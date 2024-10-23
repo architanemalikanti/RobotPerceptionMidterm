@@ -151,29 +151,30 @@ def update_plot(cube_position, tilt=0, pan=0):
     # 2D Camera View (Simulated image)
     ax2d = fig.add_subplot(122)
 
-    # Plot the outer FOV rectangle (camera image size)
-    ax2d.plot([0, 640, 640, 0, 0], [0, 0, 480, 480, 0], 'g-', label='FOV')
+    # Plot the outer FOV rectangle (fixed size)
+    ax2d.plot([40, 600, 600, 40, 40], [40, 40, 440, 440, 40], 'g-', label='FOV')
 
     if cube_in_fov and cube_vertices_2D is not None:
         # Plot the projected rectangle (the cube as seen from the camera)
         ax2d.fill([cube_vertices_2D[0, 0], cube_vertices_2D[1, 0], cube_vertices_2D[3, 0], cube_vertices_2D[2, 0], cube_vertices_2D[0, 0]], 
                   [cube_vertices_2D[0, 1], cube_vertices_2D[1, 1], cube_vertices_2D[3, 1], cube_vertices_2D[2, 1], cube_vertices_2D[0, 1]], 
-                  'r-', alpha=0.5, label='Cube Projection')
+                  color='orange', alpha=0.5, label='Cube Projection')
     else:
-        # If the cube is not in the FOV, show blank plot with a message
-        ax2d.set_xlim(0, 640)
-        ax2d.set_ylim(480, 0)  # In image coordinates, (0,0) is top-left
-        ax2d.set_title('2D Camera View (No Projection)')
-        ax2d.text(320, 240, 'No Projection', horizontalalignment='center', verticalalignment='center', fontsize=20, color='red')
+        # Display "No Projection" message when the cube is out of FOV
+        ax2d.text(320, 240, "No Projection", fontsize=12, ha='center', va='center', color='red')
 
-    # Labels and settings for the 2D plot
-    ax2d.set_xlabel('Image X')
-    ax2d.set_ylabel('Image Y')
     ax2d.set_title('2D Camera View')
-    plt.legend()
-    
-    # Show plot
+    ax2d.set_xlabel('X-axis')
+    ax2d.set_ylabel('Y-axis')
+    ax2d.set_xlim(0, 640)
+    ax2d.set_ylim(0, 480)
+    ax2d.axhline(0, color='black', lw=0.5)
+    ax2d.axvline(0, color='black', lw=0.5)
+    ax2d.grid()
+
+    plt.tight_layout()
     plt.show()
 
-# Run the initial plot with the cube at the specified position and camera rotation
-update_plot(cube_position, tilt=10, pan=10)  # Adjust tilt and pan as needed
+# Example of changing the cube position
+cube_position = np.array([0, 0, 40])  # CHANGE THIS TO EDIT CUBE POSITION
+update_plot(cube_position, tilt=0, pan=0)  # CHANGE TILT AND PAN ANGLES HERE
