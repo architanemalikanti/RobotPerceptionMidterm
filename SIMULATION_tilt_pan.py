@@ -176,4 +176,4 @@ def update_plot(cube_position, tilt=0, pan=0):
     plt.show()
 
 # Run the initial plot with the cube at the specified position and camera rotation
-update_plot(cube_position, tilt=20, pan=10)  # Adjust tilt and pan as needed
+update_plot(cube_position, tilt=10, pan=10)  # Adjust tilt and pan as needed
