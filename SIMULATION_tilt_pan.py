@@ -59,8 +59,8 @@ def rotation_matrix_x(angle_deg):
     """ Rotation matrix for tilt (rotation around x-axis). """
     angle_rad = np.radians(angle_deg)
     return np.array([[1, 0, 0],
-                     [0, np.cos(angle_rad), -np.sin(angle_rad)],
-                     [0, np.sin(angle_rad), np.cos(angle_rad)]])
+                     [0, np.cos(angle_rad), np.sin(angle_rad)],
+                     [0, -np.sin(angle_rad), np.cos(angle_rad)]])
 
 def rotation_matrix_y(angle_deg):
     """ Rotation matrix for pan (rotation around y-axis). """
@@ -68,6 +68,11 @@ def rotation_matrix_y(angle_deg):
     return np.array([[np.cos(angle_rad), 0, np.sin(angle_rad)],
                      [0, 1, 0],
                      [-np.sin(angle_rad), 0, np.cos(angle_rad)]])
+
+    #angle_rad = np.radians(angle_deg)
+    #return np.array([[np.cos(angle_rad), np.sin(angle_rad), 0],
+                   #  [-np.sin(angle_rad), np.cos(angle_rad), 0],
+                    # [0, 0, 1]])
 
 # Function to rotate FOV and cube
 def rotate_points(points_3D, tilt, pan):
@@ -177,4 +182,4 @@ def update_plot(cube_position, tilt=0, pan=0):
 
 # Example of changing the cube position
 cube_position = np.array([0, 0, 40])  # CHANGE THIS TO EDIT CUBE POSITION
-update_plot(cube_position, tilt=0, pan=0)  # CHANGE TILT AND PAN ANGLES HERE
+update_plot(cube_position, tilt= -10, pan= 0)  # CHANGE TILT AND PAN ANGLES HERE
