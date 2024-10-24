@@ -124,7 +124,7 @@ cube_vertices = np.array([[0, 0, 30],   # Bottom-front-left
                           [5, 5, 35]])  # Top-back-right
 
 # Function to add the pinhole obstacle
-def add_pinhole_obstacle(ax, frame_width=4, frame_height=3, hole_radius=0.5):
+def add_3d_pinhole_obstacle(ax, frame_width=4, frame_height=3, hole_radius=0.5):
     """ Add a 3D rectangular box with a circular pinhole to the plot. """
     # Define the box vertices (8 corners)
     box_x = [0, box_size[0], box_size[0], 0, 0, box_size[0], box_size[0], 0]
