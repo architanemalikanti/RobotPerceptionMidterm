@@ -40,6 +40,7 @@ f_y = 800
 c_x = 320   
 c_y = 240   
 
+#creates camera frame
 K = np.array([[f_x, 0, c_x],
               [0, f_y, c_y],
               [0, 0, 1]])
@@ -60,6 +61,7 @@ fov_vertices = np.array([
 ])
 
 # Rotation matrices for tilt (x-axis) and pan (y-axis)
+#
 def rotation_matrix_x(angle_deg):
     """ Rotation matrix for tilt (rotation around x-axis). """
     angle_rad = np.radians(angle_deg)
@@ -121,10 +123,41 @@ cube_vertices = np.array([[0, 0, 30],   # Bottom-front-left
                           [0, 5, 35],   # Top-back-left
                           [5, 5, 35]])  # Top-back-right
 
+# Function to add the pinhole obstacle
+def add_pinhole_obstacle(ax, frame_width=4, frame_height=3, hole_radius=0.5):
+    """ Add a rectangular frame with a circular pinhole to the plot. """
+    # Rectangular frame
+    frame_x = [-frame_width/2, frame_width/2, frame_width/2, -frame_width/2, -frame_width/2]
+    frame_y = [-frame_height/2, -frame_height/2, frame_height/2, frame_height/2, -frame_height/2]
+    frame_z = [0, 0, 0, 0, 0]
+
+    # Draw the frame
+    ax.plot(frame_x, frame_y, frame_z, color='black', linewidth=2)
+
+    # Circular pinhole
+    theta = np.linspace(0, 2 * np.pi, 100)
+    circle_x = hole_radius * np.cos(theta)
+    circle_y = hole_radius * np.sin(theta)
+    circle_z = np.zeros_like(theta)
+
+    # Draw the circular pinhole
+    ax.plot(circle_x, circle_y, circle_z, color='red', linewidth=2)
+
+
+# Assume isObstaclePresent is a global or passed variable
+isObstaclePresent = True  # Set this flag to toggle the obstacle
+
+
+
 # Function to update the plot
 def update_plot(cube_position, tilt=0, pan=0):
     # Update cube vertices based on the new position
     cube_vertices_rotated = rotate_points(cube_vertices + cube_position, tilt, pan)
+    # Add the obstacle if the flag is set
+
+    # Add the obstacle if the flag is set
+    if isObstaclePresent:
+        add_pinhole_obstacle(ax3d)
 
     # Check if the cube is within the FOV
     cube_in_fov = is_within_fov(cube_position)
