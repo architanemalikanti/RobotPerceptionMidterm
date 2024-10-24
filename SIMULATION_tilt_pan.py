@@ -125,22 +125,31 @@ cube_vertices = np.array([[0, 0, 30],   # Bottom-front-left
 
 # Function to add the pinhole obstacle
 def add_pinhole_obstacle(ax, frame_width=4, frame_height=3, hole_radius=0.5):
-    """ Add a rectangular frame with a circular pinhole to the plot. """
-    # Rectangular frame
-    frame_x = [-frame_width/2, frame_width/2, frame_width/2, -frame_width/2, -frame_width/2]
-    frame_y = [-frame_height/2, -frame_height/2, frame_height/2, frame_height/2, -frame_height/2]
-    frame_z = [0, 0, 0, 0, 0]
+    """ Add a 3D rectangular box with a circular pinhole to the plot. """
+    # Define the box vertices (8 corners)
+    box_x = [0, box_size[0], box_size[0], 0, 0, box_size[0], box_size[0], 0]
+    box_y = [0, 0, box_size[1], box_size[1], 0, 0, box_size[1], box_size[1]]
+    box_z = [0, 0, 0, 0, box_size[2], box_size[2], box_size[2], box_size[2]]
 
-    # Draw the frame
-    ax.plot(frame_x, frame_y, frame_z, color='black', linewidth=2)
+    # Define the edges connecting the vertices
+    edges = [
+        (0, 1), (1, 2), (2, 3), (3, 0),  # Bottom face
+        (4, 5), (5, 6), (6, 7), (7, 4),  # Top face
+        (0, 4), (1, 5), (2, 6), (3, 7)   # Vertical edges
+    ]
 
-    # Circular pinhole
+    # Draw the rectangular box
+    for edge in edges:
+        ax.plot([box_x[edge[0]], box_x[edge[1]]],
+                [box_y[edge[0]], box_y[edge[1]]],
+                [box_z[edge[0]], box_z[edge[1]]], color='black')
+
+    # Draw the circular pinhole on the front face of the box
     theta = np.linspace(0, 2 * np.pi, 100)
-    circle_x = hole_radius * np.cos(theta)
-    circle_y = hole_radius * np.sin(theta)
+    circle_x = hole_radius * np.cos(theta) + box_size[0] / 2
+    circle_y = hole_radius * np.sin(theta) + box_size[1] / 2
     circle_z = np.zeros_like(theta)
 
-    # Draw the circular pinhole
     ax.plot(circle_x, circle_y, circle_z, color='red', linewidth=2)
 
 
@@ -151,11 +160,8 @@ isObstaclePresent = True  # Set this flag to toggle the obstacle
 
 # Function to update the plot
 def update_plot(cube_position, tilt=0, pan=0):
-    # Update cube vertices based on the new position
+    # Rotate the cube vertices based on the new position
     cube_vertices_rotated = rotate_points(cube_vertices + cube_position, tilt, pan)
-    # Add the obstacle if the flag is set
-
-    
 
     # Check if the cube is within the FOV
     cube_in_fov = is_within_fov(cube_position)
@@ -175,9 +181,9 @@ def update_plot(cube_position, tilt=0, pan=0):
     # 3D plot to visualize the setup
     ax3d = fig.add_subplot(121, projection='3d')
     
-    # Add the obstacle if the flag is set
+    # Add the 3D pinhole obstacle if the flag is set
     if isObstaclePresent:
-        add_pinhole_obstacle(ax3d)
+        add_3d_pinhole_obstacle(ax3d)
 
     # Plot the cube in 3D
     plot_cube_on_camera_simulation(ax3d, position=cube_position)
@@ -189,9 +195,9 @@ def update_plot(cube_position, tilt=0, pan=0):
     ax3d.set_xlabel('X')
     ax3d.set_ylabel('Y')
     ax3d.set_zlabel('Z')
-    ax3d.set_xlim(-20, 30)
-    ax3d.set_ylim(-20, 30)
-    ax3d.set_zlim(0, 60)
+    ax3d.set_xlim(-10, 20)
+    ax3d.set_ylim(-10, 20)
+    ax3d.set_zlim(0, 10)
 
     # 2D Camera View (Simulated image)
     ax2d = fig.add_subplot(122)
@@ -219,6 +225,7 @@ def update_plot(cube_position, tilt=0, pan=0):
 
     plt.tight_layout()
     plt.show()
+
 
 # Example of changing the cube position
 cube_position = np.array([0, 0, 30])  # CHANGE THIS TO EDIT CUBE POSITION
