@@ -155,9 +155,7 @@ def update_plot(cube_position, tilt=0, pan=0):
     cube_vertices_rotated = rotate_points(cube_vertices + cube_position, tilt, pan)
     # Add the obstacle if the flag is set
 
-    # Add the obstacle if the flag is set
-    if isObstaclePresent:
-        add_pinhole_obstacle(ax3d)
+    
 
     # Check if the cube is within the FOV
     cube_in_fov = is_within_fov(cube_position)
@@ -176,6 +174,10 @@ def update_plot(cube_position, tilt=0, pan=0):
 
     # 3D plot to visualize the setup
     ax3d = fig.add_subplot(121, projection='3d')
+    
+    # Add the obstacle if the flag is set
+    if isObstaclePresent:
+        add_pinhole_obstacle(ax3d)
 
     # Plot the cube in 3D
     plot_cube_on_camera_simulation(ax3d, position=cube_position)
@@ -219,5 +221,5 @@ def update_plot(cube_position, tilt=0, pan=0):
     plt.show()
 
 # Example of changing the cube position
-cube_position = np.array([0, 30, 10])  # CHANGE THIS TO EDIT CUBE POSITION
+cube_position = np.array([0, 0, 30])  # CHANGE THIS TO EDIT CUBE POSITION
 update_plot(cube_position, tilt= 0, pan= 0)  # CHANGE TILT AND PAN ANGLES HERE
